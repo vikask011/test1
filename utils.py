@@ -1,6 +1,4 @@
-def calculate_fines(days_overdue, daily_rate):
-    """Calculates fine, but crashes if daily_rate is not provided correctly."""
-    return days_overdue / daily_rate
-
-def format_book_name(title, author):
-    return f"{title.upper()} by {author.title()}"
+def format_book_list(books):
+    if not books:
+        return "No books available."
+    return "\n".join(f"  - {b.title} by {b.author}" for b in books)

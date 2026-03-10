@@ -1,18 +1,28 @@
-import pytest
 from library import Library, Book
+
 
 def test_add_and_checkout():
     lib = Library()
-    lib.add_book(Book("1984", "George Orwell"))
-    assert lib.checkout_book("1984") == "Checked out 1984"
+    book = Book("Clean Code", "Robert Martin")
+    lib.add_book(book)
+
+    result = lib.checkout_book(book)
+    assert result == True
+    assert book.is_checked_out == True
+    assert book not in lib.available_books()
+
 
 def test_double_checkout_prevention():
-    """THIS TEST SHOULD FAIL until the agent fixes library.py"""
     lib = Library()
-    lib.add_book(Book("The Hobbit", "J.R.R. Tolkien"))
-    
-    lib.checkout_book("The Hobbit")
-    # This second checkout should return an error or False, not success
-    result = lib.checkout_book("The Hobbit")
-    
-    assert "already checked out" in result.lower() or result == "Book not available"
+    book = Book("The Pragmatic Programmer", "Hunt & Thomas")
+    lib.add_book(book)
+
+    first = lib.checkout_book(book)
+    assert first == True
+
+    # Second checkout of the same book should be rejected
+    second = lib.checkout_book(book)
+    assert second == False, "Should not allow checking out an already checked-out book"
+
+    # Should only appear once in checkouts
+    assert lib.checkouts.count(book) == 1
